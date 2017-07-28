@@ -6,3 +6,9 @@ var server = http.createServer(function(req, res) {
 });
 
 server.listen(process.env.PORT);
+
+var io = require('socket.io')(server);
+
+io.on('connection', function (socket) {
+  console.log('server listen');
+});
