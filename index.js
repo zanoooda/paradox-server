@@ -13,3 +13,5 @@ io.on('connection', function (socket) {
   console.log('server listen');
   //
 });
+
+console.log(process.env.PORT);
