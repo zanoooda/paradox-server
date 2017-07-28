@@ -11,6 +11,10 @@ var io = require('socket.io')(server);
 
 io.on('connection', function (socket) {
   console.log('server listen');
+
+  socket.on('event', function (data) {
+      console.log(JSON.stringify(data));
+  });
   //
 });
 
