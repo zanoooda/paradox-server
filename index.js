@@ -1,14 +1,8 @@
-var express = require('express');
 var http = require('http');
-var path = require('path');
 
-var app = express();
-var server = http.createServer(app);
+var server = http.createServer(function(req, res) {
+    res.writeHead(200, {"Content-Type": "text/plain"});
+    res.end("Hello World\n");
+});
 
 server.listen(process.env.PORT);
-
-var io = require('socket.io')(app);
-
-io.on('connection', function (socket) {
-  console.log('Hello server!');
-});
