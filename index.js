@@ -1,7 +1,7 @@
 var http = require('http');
 var server = http.createServer(function(req, res) {
     res.writeHead(200, {"Content-Type": "text/plain"});
-    res.end("Paradox server 004\n");
+    res.end("Paradox server 0.0.6\n");
 });
 
 server.listen(process.env.PORT);
