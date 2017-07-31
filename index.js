@@ -1,7 +1,7 @@
 var http = require('http');
 var server = http.createServer(function(req, res) {
     res.writeHead(200, {"Content-Type": "text/plain"});
-    res.end("Paradox server 0.0.20\n");
+    res.end("Paradox server 0.0.21\n");
 });
 
 server.listen(process.env.PORT);
@@ -25,14 +25,16 @@ io.on('connection', function (socket) {
             // do something with socket here
             if(!b && s.isOnline && !s.isPlaying && s.id != socket.id) {
                 s.isPlaying = true;
+                s.player = 2;
+                socket.player = 1;
                 socket.isPlaying = true;
                 s.opponentId = socket.id;
                 socket.opponentId = s.id;
 
                 b = true;
 
-                socket.emit('opponent-found', s.id);
-                socket.broadcast.to(s.id).emit('opponent-found', socket.id);
+                socket.emit('opponent-found', socket.player);
+                socket.broadcast.to(s.id).emit('opponent-found', s.player);
             }
             //console.log(s.id, s.isOnline, s.isPlaying);
         });
@@ -41,5 +43,9 @@ io.on('connection', function (socket) {
             // no opponents right now
         }
         
+    });
+
+    socket.on('move', function (data) {
+        socket.broadcast.to(socket.opponentId).emit('opponent-move', data);
     });
 });
