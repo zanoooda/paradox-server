@@ -1,7 +1,7 @@
 var http = require('http');
 var server = http.createServer(function(req, res) {
     res.writeHead(200, {"Content-Type": "text/plain"});
-    res.end("Paradox server 0.0.19\n");
+    res.end("Paradox server 0.0.20\n");
 });
 
 server.listen(process.env.PORT);
@@ -31,8 +31,8 @@ io.on('connection', function (socket) {
 
                 b = true;
 
-                socket.emit('get-opponent', s.id);
-                socket.broadcast.to(s.id).emit('get-opponent', socket.id);
+                socket.emit('opponent-found', s.id);
+                socket.broadcast.to(s.id).emit('opponent-found', socket.id);
             }
             //console.log(s.id, s.isOnline, s.isPlaying);
         });
