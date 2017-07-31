@@ -16,10 +16,9 @@ io.on('connection', function (socket) {
         console.log('who want to play, looking for the opponent');
         var data = { opponent: 'petya'};
 
-        var list = io.sockets.sockets;
-        console.log("Connected sockets:");
-        list.forEach(function(s) {
-            console.log("    socket.id = ", s.id);
+        io.clients((error, clients) => {
+            if (error) throw error;
+            console.log(clients); // => [6em3d4TJP8Et9EMNAAAA, G5p55dHhGgUnLUctAAAB]
         });
 
         socket.emit('get-opponent', data);
