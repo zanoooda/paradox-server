@@ -1,7 +1,7 @@
 var http = require('http');
 var server = http.createServer(function(req, res) {
     res.writeHead(200, {"Content-Type": "text/plain"});
-    res.end("Paradox server 0.0.8\n");
+    res.end("Paradox server 0.0.9\n");
 });
 
 server.listen(process.env.PORT);
@@ -12,9 +12,10 @@ io.on('connection', function (socket) {
     console.log(socket.id.toString() + ' connected');
 
     var clients = io.sockets.clients();
-    clients.forEach(function(element) {
-        console.log(element.id);
-    }, this);
+    // clients.forEach(function(element) {
+    //     console.log(element.id);
+    // }, this);
+    console.log(clients);
 
     socket.on('play', function (data) {
         console.log(socket.id.toString() + ' want to play, looking for the opponent');
