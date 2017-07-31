@@ -16,6 +16,12 @@ io.on('connection', function (socket) {
         console.log('who want to play, looking for the opponent');
         var data = { opponent: 'petya'};
 
+        var list = io.sockets.sockets;
+        console.log("Connected sockets:");
+        list.forEach(function(s) {
+            console.log("    socket.id = ", s.id);
+        });
+
         socket.emit('get-opponent', data);
     });
 });
