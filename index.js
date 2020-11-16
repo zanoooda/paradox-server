@@ -8,41 +8,37 @@ var io = require('socket.io')(server);
 io.on('connection', function (socket) {
     console.log(socket.id, 'connected');
 
-    socket.on('play', function() {
-        console.log(socket.id, 'play');
+    socket.emit('counter', Object.keys(io.sockets.connected).length);
 
-        socket.emit('counter', Object.keys(io.sockets.connected).length);
+    socket.partnerId = getPartnerId(socket, io);
+    if(socket.partnerId) {
+        console.log(socket.id, 'partner-found');
 
-        socket.opponentId = getOpponentId(socket, io);
-        if(socket.opponentId) {
-            console.log(socket.id, 'opponent-found');
+        io.sockets.connected[socket.partnerId].partnerId = socket.id;
 
-            io.sockets.connected[socket.opponentId].opponentId = socket.id;
-
-            io.sockets.connected[socket.opponentId].emit('opponent-found', 1);
-            socket.emit('opponent-found', 0);
-        }
-    });
+        io.sockets.connected[socket.partnerId].emit('partner-found', 0);
+        socket.emit('partner-found', 1);
+    }
 
     socket.on('move', function(move) {
-        console.log(`${ocket.id}, move ${move}`);
+        console.log(`${socket.id}, move ${move}`);
 
-        if(socket.opponentId && io.sockets.connected[socket.opponentId]) {
-            socket.broadcast.to(socket.opponentId).emit('move', move);
+        if(socket.partnerId && io.sockets.connected[socket.partnerId]) {
+            socket.broadcast.to(socket.partnerId).emit('move', move);
         }
     });
 
     socket.on('disconnect', function() {
         console.log(socket.id, 'disconnect');
 
-        if(socket.opponentId && io.sockets.connected[socket.opponentId]) {
-            io.sockets.connected[socket.opponentId].disconnect();
+        if(socket.partnerId && io.sockets.connected[socket.partnerId]) {
+            io.sockets.connected[socket.partnerId].disconnect();
         }
     });
 });
 
-function getOpponentId(socket, io) {
-    var opponentId = false;
+function getPartnerId(socket, io) {
+    var partnerId = false;
 
     var b = false;
     var ids = Object.keys(io.sockets.connected);
@@ -51,13 +47,13 @@ function getOpponentId(socket, io) {
         if(
             !b && 
             s.id != socket.id &&
-            s.opponentId !== undefined && 
-            !s.opponentId
+            s.partnerId !== undefined && 
+            !s.partnerId
         ) {
-            opponentId = s.id;
+            partnerId = s.id;
             b = true;
         }
     });
 
-    return opponentId;
+    return partnerId;
 }
