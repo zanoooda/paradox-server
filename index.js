@@ -20,15 +20,15 @@ io.on('connection', function (socket) {
             io.sockets.connected[socket.opponentId].opponentId = socket.id;
 
             io.sockets.connected[socket.opponentId].emit('opponent-found', 1);
-            socket.emit('opponent-found', 2);
+            socket.emit('opponent-found', 0);
         }
     });
 
-    socket.on('move', function(state) {
-        console.log(socket.id, 'move');
+    socket.on('move', function(move) {
+        console.log(`${ocket.id}, move ${move}`);
 
         if(socket.opponentId && io.sockets.connected[socket.opponentId]) {
-            socket.broadcast.to(socket.opponentId).emit('move', state);
+            socket.broadcast.to(socket.opponentId).emit('move', move);
         }
     });
 
