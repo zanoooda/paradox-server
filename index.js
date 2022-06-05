@@ -1,4 +1,4 @@
-var http = require('http');
+var http = require('http')
 var server = http.createServer(function(req, res) {
     res.end(Object.keys(io.sockets.connected).length + ' users online');
 });
